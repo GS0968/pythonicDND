@@ -1,4 +1,5 @@
 import sys
+import random
 
 def start(): #not fully complete yet
     option=input("Do you want to start a new game or load a previous game?: ")
@@ -44,5 +45,17 @@ class Room:
                 monsterinfo=monsterinfo+monster.getinfo()
 
 class Monster: #didn't start yet just added for class room
-    def __init__(self):
-        self
+    def __init__(self, name):
+        self.mname=name
+        #self.health=
+        #self.power=
+    
+    def attack(self, hit):
+        #characters=getcharacters()
+        #character=random.choice(characters)
+        #characterinfo=gentinfo(character)
+
+
+class Character:
+    def __init__(self, name):
+        self.name=name
