@@ -25,27 +25,23 @@ class Room:
     
     def showinfo(self):
         name=self.rname
-        if len(self.loot)>0:
-            items=self.loot
-            for i in range(len(items)):
-                itemstring=str()
-                itemstring=itemstring+items[i]
-        if len(self.monsters)>0:
-            monsters=self.monsters
-            for i in range(len(monsters)):
-                monsterinfo=str()
-                monster=Monster(monsters[i])
-                monsterinfo=monsterinfo+monster.getinfo()
-        if self.visited==True:
-            visit="You have already visited this place"
-        else:
-            visit="You haven't opened this room"
         if self._traps>5:
             traps= "multiple traps"
         elif 0<self._traps<=5:
             traps= "a few traps"
         else:
             traps= "no traps"
+        if self.visited==True:
+            string=f"You have already visited this place. There are currently {len(self.monsters)} undefeated, {traps} armed, and {len(self.loot)} not looted in this place"
+
+        else:
+            visit=f"You haven't opened this room. There are currently {len(self.monsters)} undefeated, {traps} armed, and {len(self.loot)} not looted in this place"
+        if len(self.monsters)>0:
+            monsters=self.monsters
+            for i in range(len(monsters)):
+                monsterinfo=str()
+                monster=Monster(monsters[i])
+                monsterinfo=monsterinfo+monster.getinfo()
 
 class Monster: #didn't start yet just added for class room
     def __init__(self):
