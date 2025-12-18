@@ -16,6 +16,10 @@ def start(): #not fully complete yet
         case "new" | "new game":
             newfile=input("Enter savefile name: ")
 
+class Character:
+    def __init__(self, name):
+        self.cname=name
+
 class Room:
     def __init__(self,name, items, monster, trap, visit=False):
         self.rname=name 
@@ -54,8 +58,3 @@ class Monster: #didn't start yet just added for class room
         #characters=getcharacters()
         #character=random.choice(characters)
         #characterinfo=gentinfo(character)
-
-
-class Character:
-    def __init__(self, name):
-        self.name=name
