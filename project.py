@@ -58,3 +58,8 @@ class Monster: #didn't start yet just added for class room
         #characters=getcharacters()
         #character=random.choice(characters)
         #characterinfo=gentinfo(character)
+
+
+class Character:
+    def __init__(self, name):
+        self.name=name
