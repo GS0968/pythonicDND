@@ -19,10 +19,6 @@ def start(): #not fully complete yet
 def roll():
     return random.randint(1,20)
 
-class Character:
-    def __init__(self, name):
-        self.cname=name
-
 class Room:
     def __init__(self,name, items, monster, trap, visit=False):
         self.rname=name 
@@ -62,7 +58,8 @@ class Monster:
         characters=getcharacters()
         character=random.choice(characters)
         characterinfo=gentinfo(character)
-        c=Character(character, characterinfo)
+        name, health, power, type=characterinfo.split(" , ")
+        c=Character(name, health, power, type)
         c.takedamage(self.power)
 
     def takedamage(self, damage):
@@ -76,8 +73,6 @@ class Monster:
     def getinfo(self):
         details=[f"{self.mname}, {str(self.health)}, {str(self.power)}"]
         return details
-
-
 
 class Character:
     def __init__(self, name, health, power, type):
@@ -93,4 +88,9 @@ class Character:
         monster.takedamage(attack)
     
     def takedamage(self, damage):
-        
+        health=self.health-damage
+        if health>0:
+            self.health=health
+        else:
+            print(f"{self.name} has been defeated")
+            
