@@ -68,7 +68,7 @@ class Monster:
             self.health=health
         else:
             print("You have defeated the monster")
-            removemonster(self.room)
+            removemonster(self.room,self.mname)
     
     def getinfo(self):
         details=[f"{self.mname}, {str(self.health)}, {str(self.power)}"]
@@ -93,4 +93,3 @@ class Character:
             self.health=health
         else:
             print(f"{self.name} has been defeated")
-            
