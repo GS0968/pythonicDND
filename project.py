@@ -16,6 +16,9 @@ def start(): #not fully complete yet
         case "new" | "new game":
             newfile=input("Enter savefile name: ")
 
+def roll():
+    return random.randint(1,20)
+
 class Character:
     def __init__(self, name):
         self.cname=name
@@ -43,8 +46,8 @@ class Room:
             visit=f"You haven't opened this room. There are currently {len(self.monsters)} undefeated, {traps} armed, and {len(self.loot)} not looted in this place"
         if len(self.monsters)>0:
             monsters=self.monsters
+            monsterinfo=str()
             for i in range(len(monsters)):
-                monsterinfo=str()
                 monster=Monster(monsters[i])
                 monsterinfo=monsterinfo+monster.getinfo()
 
@@ -69,6 +72,10 @@ class Monster:
         else:
             print("You have defeated the monster")
             removemonster(self.room)
+    
+    def getinfo(self):
+        details=[f"{self.mname}, {str(self.health)}, {str(self.power)}"]
+        return details
 
 
 
@@ -79,5 +86,11 @@ class Character:
         self.power=power
         self.type=type
 
-    def attack(self,monster):
-        dice=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+    def attack(self,mdetails):
+        attack=self.power*(roll()/10)
+        name, health, power, room=mdetails.split(" , ")
+        monster=Monster(name, health, power, room)
+        monster.takedamage(attack)
+    
+    def takedamage(self, damage):
+        
