@@ -40,7 +40,7 @@ def load_game(filename):
 def save_game(filename,player,rooms):
     game_state = {
         "player": player.to_dict(),
-        "rooms": [room.todict() for room in rooms]
+        "rooms": [room.to_dict() for room in rooms]
     }
     with open(filename, "w") as file:
         json.dump(game_state, file, indent=4)
