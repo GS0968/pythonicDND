@@ -2,9 +2,6 @@ import sys
 import random
 import json
 
-def roll():
-    return random.randint(1,20)
-
 class Room:
     def __init__(self,name, items, monster, trap, visit=False):
         self.rname=name 
@@ -121,7 +118,7 @@ class Character:
         )
 
     def attack(self,mdetails):
-        attack=self.power*(roll()/10)
+        attack=self.power*(random.randint(1,20)/10) #random.randint() is used to mimic a die to see how efficitive the acttack would be
         name, health, power, room=mdetails.split(" , ")
         monster=Monster(name, health, power, room)
         monster.takedamage(attack)
