@@ -41,4 +41,4 @@ def save_game(filename,player,rooms):
 
 def make_character(name,classtype):
     details=json.load(newgamefile) #newgamefile is a json with preset characters types and rooms
-    
+    classtypes=
