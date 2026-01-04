@@ -1,0 +1,23 @@
+{
+    "rooms": [
+        "dungeon1info",
+        "dungeon2info",
+        "dungeon3info",
+        "dungeon4info"
+    ],
+
+    "monsters": [
+        "monster1info",
+        "monster2info",
+        "monster3info",
+        "monster4info"
+    ], 
+
+    "charactertype": [
+        "barbarian",
+        "knight",
+        "theif",
+        "mage",
+        "archer"
+    ]
+}
