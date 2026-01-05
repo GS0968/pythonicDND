@@ -71,5 +71,5 @@ def make_char(name,classtype):
 def make_room():
     with open("newgamefile","r") as file:
         data=json.load(file)
-    roomds=data["room"]
-    return room
+    rooms=data["rooms"]
+    return rooms
