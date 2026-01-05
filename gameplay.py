@@ -22,11 +22,11 @@ def start(): #not fully complete yet
             while True:
                 classtype=input("Enter the class you want your hero to be: ")
                 try:
-                    player = make_char(new_name,classtype)#add the starting values
+                    player= make_char(new_name,classtype)#add the starting values
+                    room=make_room()
                     break
                 except ValueError:
                     print("invalid character type")
-            rooms = []
             save_game(newfile, player, rooms)
             return player, rooms
 
@@ -46,9 +46,24 @@ def save_game(filename,player,rooms):
         json.dump(game_state, file, indent=4)
 
 def make_char(name,classtype):
+    classtype=str(classtype)
+    classtype=classtype.strip().lower()
     with open("newgamefile", "r") as file:
         data=json.load(file)
-        classes= #newgamefile is a json with preset characters types and rooms
-    #classtypes(a list) gets all the class of the heros available
-    #then search if the classtype given matches one of them in the list
-    #if match assign to character if not give ValueError saying "not valid class"
+    charinfo=data["character info"]
+    match classtype:
+        case "warrior":
+            playerlistinfo=charinfo[1]
+        case "rouge":
+            playerlistinfo=charinfo[2]
+        case "mage":
+            playerlistinfo=charinfo[3]
+        case "paladin":
+            playerlistinfo=charinfo[4]
+        case _:
+            raise ValueError
+    health=playerlistinfo[1]
+    power=playerlistinfo[2]
+    type=playerlistinfo[3]
+    #level=playelistinfo[4]
+    player=Character(name,health,power,type)
