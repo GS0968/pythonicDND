@@ -3,9 +3,9 @@ import random
 import json
 
 class Room:
-    def __init__(self,name, items, monster, trap, visit=False):
+    def __init__(self,name, monster, trap, visit=False):
         self.rname=name 
-        self.loot=items #will get a list of each loot in the room
+        #self.loot=items will get a list of each loot in the room (added later)
         self.monsters=monster #will get a list of each monster(if visted the defeated mosters wont be seen) in the room
         self.visited=visit
         self._traps=trap #will show the number of traps present in the room (shouldnt be visible to characters/players)
@@ -13,7 +13,7 @@ class Room:
     def to_dict(self):
         return {
             "name": self.rname,
-            "loot": self.loot,
+            #"loot": self.loot,
             "monsters": [m.to_dict() for m in self.monsters],
             "traps": self._traps,
             "visited": self.visited
@@ -96,12 +96,12 @@ class Monster:
         return details
 
 class Character:
-    def __init__(self, name, health, power, type, level):
+    def __init__(self, name, health, power, type):
         self.name=name
         self.health=health
         self.power=power
         self.type=type
-        self.lvl=level
+        #self.lvl=level
 
     def to_dict(self):
         return {
