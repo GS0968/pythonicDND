@@ -23,7 +23,7 @@ def start(): #not fully complete yet
                 classtype=input("Enter the class you want your hero to be: ")
                 try:
                     player= make_char(new_name,classtype)#add the starting values
-                    room=make_room()
+                    rooms=make_room()
                     break
                 except ValueError:
                     print("invalid character type")
@@ -67,3 +67,9 @@ def make_char(name,classtype):
     type=playerlistinfo[3]
     #level=playelistinfo[4]
     player=Character(name,health,power,type)
+
+def make_room():
+    with open("newgamefile","r") as file:
+        data=json.load(file)
+    roomds=data["room"]
+    return room
