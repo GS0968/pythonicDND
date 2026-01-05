@@ -18,7 +18,8 @@ class Room:
             "traps": self._traps,
             "visited": self.visited
         }
-        
+
+    @classmethod
     def from_dict(cls, data):
         monsters = [Monster.from_dict(m) for m in data["monsters"]]
         return cls(
@@ -65,6 +66,7 @@ class Monster:
             "room": self.room
         }
 
+    @classmethod
     def from_dict(cls, data):
         return cls(
             data["name"],
@@ -109,6 +111,7 @@ class Character:
             "type": self.type
         }
 
+    @classmethod
     def from_dict(cls, data):
         return cls(
             data["name"],
