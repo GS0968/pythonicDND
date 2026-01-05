@@ -19,9 +19,9 @@
     ], 
     
     "character info":[
-        [ 120, 12, "warrior", 1 ],
-        [ 85, 16, "rouge", 1 ],
-        [ 70, 20, "mage", 1],
-        [ 100, 10, "paladin", 1]
+        [ 120, 12, "warrior"],
+        [ 85, 16, "rouge"],
+        [ 70, 20, "mage"],
+        [ 100, 10, "paladin"]
     ]
 }
