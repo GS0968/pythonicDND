@@ -1,12 +1,12 @@
 {
     "rooms": [
-        ["Entrance Hall", ["Goblin"], 4],
+        ["Entrance Hall", "Goblin", 4],
         ["Hall of Fame", ["Goblin, Slime"],3],
         ["Abandoned Armory", ["Goblin", "Skeletons"], 2],
         ["Dark Corridor", ["Skeletons", "Slime", "Brute"], 6],
         ["Poison Laboratory", ["Slime", "Brute"], 9],
         ["Ancient Library", ["Dark Mage", "Goblin", "Zombies"], 5],
-        ["Chamber of Secrets", ["Dungeon Guardian"], 0]
+        ["Chamber of Secrets", "Dungeon Guardian", 0]
     ],
 
     "monsters": [
