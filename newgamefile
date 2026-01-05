@@ -17,13 +17,6 @@
         ["Dark Mage", 60, 12, ["Ancient Library"]],
         ["Dungeon Guardian", 180, 18, ["Chamber of Secrets"]]
     ], 
-
-    "character": [
-        "warrior",
-        "rouge",
-        "mage",
-        "paladin"
-    ],
     
     "character info":[
         [ 120, 12, "warrior", 1 ],
