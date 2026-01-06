@@ -99,4 +99,7 @@ def removemonster(room,mname):
     rmonsters=roomdetail[2]
     rtraps=roomdetail[3]
     r=Room(rname,rmonsters,rtraps,True)
-    r.removemonster(mname)    
+    r.removemonster(mname)
+
+def getcharacterinfo():
+    
