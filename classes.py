@@ -1,6 +1,7 @@
 import sys
 import random
 import json
+import gameplay
 
 class Room:
     def __init__(self,name, monster, trap, visit=False):
@@ -50,6 +51,16 @@ class Room:
             for i in range(len(monsters)):
                 monster=Monster(monsters[i])
                 monsterinfo=monsterinfo+monster.getinfo()
+    
+    def removemonster(self,mname):
+        monster=[]
+        monsters=self.monsters
+        for i in range(len(monsters)-1):
+            if mname==monsters[i]:
+                pass
+            else:
+                monster.append(monsters[i])
+        self.monsters=monster
 
 class Monster: 
     def __init__(self, name, health, power, room):
@@ -76,11 +87,9 @@ class Monster:
         )
     
     def attack(self):
-        characters=getcharacters()
-        character=random.choice(characters)
-        characterinfo=gentinfo(character)
-        name, health, power, type=characterinfo.split(" , ")
-        c=Character(name, health, power, type)
+        characterinfo=getcharacterinfo()
+        name, health, power, type, initialhealth, room=characterinfo.split(" , ")
+        c=Character(name, health, power, type, initialhealth, room)
         c.takedamage(self.power)
 
     def takedamage(self, damage):
@@ -89,18 +98,34 @@ class Monster:
             self.health=health
         else:
             print("You have defeated the monster")
-            removemonster(self.room,self.mname)
+            self.removeroom()
     
     def getinfo(self):
         details=[f"{self.mname}, {str(self.health)}, {str(self.power)}"]
         return details
+    
+    def removeroom(self):
+        characterinfo=getcharacterinfo()
+        name, health, power, type, initialhealth, croom=characterinfo.split(" , ")
+        room=self.room
+        rooms=[]
+        if croom!="":
+            for i in range(len(room)-1):
+                if room[i]==croom:
+                    pass
+                else:
+                    rooms.append(room[i])
+        self.room=rooms
+        gameplay.removemonster(croom,self.mname)
 
 class Character:
-    def __init__(self, name, health, power, type):
+    def __init__(self, name, health, power, type, initialhealth, room):
         self.name=name
         self.health=health
         self.power=power
         self.type=type
+        self.croom=room #show the room current character is in
+        self._ihealth=initialhealth #should not be changed throughout game for character
         #self.lvl=level
 
     def to_dict(self):
