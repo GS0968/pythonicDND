@@ -22,7 +22,7 @@ def start(): #not fully complete yet
             while True:
                 classtype=input("Enter the class you want your hero to be: ")
                 try:
-                    player= make_char(new_name,classtype)#add the starting values
+                    player= make_char(new_name,classtype)
                     rooms=make_room()
                     break
                 except ValueError:
@@ -39,8 +39,8 @@ def load_game(filename):
 
 def save_game(filename,player,rooms):
     game_state = {
-        "player": player.to_dict(),
-        "rooms": [room.to_dict() for room in rooms]
+        "player": Character.to_dict(),
+        "rooms": [Room.to_dict() for room in rooms]
     }
     with open(filename, "w") as file:
         json.dump(game_state, file, indent=4)
@@ -73,3 +73,30 @@ def make_room():
         data=json.load(file)
     rooms=data["rooms"]
     return rooms
+
+def removemonster(room,mname):
+    with open("newgamefile","r") as file:
+        data=json.load(file)
+    rooms=data["rooms"]
+    match room:
+        case "Entrance Hall":
+            roomdetail=rooms[1]
+        case "Hall of Fame":
+            roomdetail=rooms[2]
+        case "Abandoned Armory":
+            roomdetail=rooms[3]
+        case "Dark Corridor":
+            roomdetail=rooms[4]
+        case "Poison Laboratory":
+            roomdetail=rooms[5]
+        case "Ancient Library":
+            roomdetail=rooms[6]
+        case "Chamber of Secrets":
+            roomdetail=rooms[7]
+        case _:
+            raise ValueError
+    rname=roomdetail[1]
+    rmonsters=roomdetail[2]
+    rtraps=roomdetail[3]
+    r=Room(rname,rmonsters,rtraps,True)
+    r.removemonster(mname)    
