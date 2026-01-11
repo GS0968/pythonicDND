@@ -1,7 +1,7 @@
 {
     "rooms": [
         ["Entrance Hall", ["Goblin"], 4],
-        ["Hall of Fame", ["Goblin, Slime"],3],
+        ["Hall of Fame", ["Goblin", "Slime"],3],
         ["Abandoned Armory", ["Goblin", "Skeletons"], 2],
         ["Dark Corridor", ["Skeletons", "Slime", "Brute"], 6],
         ["Poison Laboratory", ["Slime", "Brute"], 9],
@@ -18,10 +18,10 @@
         ["Dungeon Guardian", 180, 18, ["Chamber of Secrets"]]
     ], 
     
-    "character info":[
-        [ 120, 12, "warrior", 120, ""],
-        [ 85, 16, "rouge", 85, ""],
-        [ 70, 20, "mage", 70, ""],
-        [ 100, 10, "paladin", 100, ""]
+    "character":[
+        [ 120, 12, ["Powerstrike", 1.8], "warrior", 120, ""],
+        [ 85, 16, ["Backstab", 2.5], "rouge", 85, ""],
+        [ 70, 20, ["Firebolt", 2], "mage", 70, ""],
+        [ 100, 10, ["Divine Smite", 1.3,0.25], "paladin", 100, ""]
     ]
 }
