@@ -1,8 +1,8 @@
 import sys
 import json
-from classes import Character
-from classes import Room
-from classes import Monster
+from entities import Character
+from entities import Room
+from entities import Monster
 
 def start(): #not fully complete yet
     option=input("Do you want to start a new game or load a previous game?: ")
@@ -20,37 +20,42 @@ def start(): #not fully complete yet
             newfile=input("Enter savefile name: ")
             new_name = input("Enter the name for your character: ")
             while True:
-                classtype=input("Enter the class you want your hero to be: ")
+                classtype=input("Enter the class you want your hero to be [warrior | rouge | mage | paladin]: ")
                 try:
-                    player= make_char(new_name,classtype)
+                    health,power, sattack, type,ihealth,croom= make_char(classtype)
                     rooms=make_room()
+                    monsters=make_monsters()
+                    player=[new_name, health, power, sattack, type, ihealth, croom]
                     break
                 except ValueError:
                     print("invalid character type")
-            save_game(newfile, player, rooms)
-            return player, rooms, newfile
+            save_game(newfile, player, rooms, monsters)
+            return player, rooms, monsters, newfile
 
 def load_game(filename):
     with open(filename, "r") as file:
         data = json.load(file)
-    player = Character.from_dict(data["player"])
-    rooms = [Room.from_dict(r) for r in data["rooms"]]
-    return player, rooms
+    
+    player = data["character"]
+    rooms = data["rooms"]
+    monsters= data["monster"]
+    return player, rooms, monsters, filename
 
-def save_game(filename,player,rooms):
+def save_game(filename,player,rooms,monsters): #player, room, and mosnters are list
     game_state = {
-        "player": Character.to_dict(),
-        "rooms": [Room.to_dict() for room in rooms]
+        "rooms": rooms,
+        "monster":monsters,
+        "character": player
     }
     with open(filename, "w") as file:
         json.dump(game_state, file, indent=4)
 
-def make_char(name,classtype):
+def make_char(classtype):
     classtype=str(classtype)
     classtype=classtype.strip().lower()
     with open("newgamefile", "r") as file:
         data=json.load(file)
-    charinfo=data["character info"]
+    charinfo=data["character"]
     match classtype:
         case "warrior":
             playerlistinfo=charinfo[1]
@@ -62,14 +67,22 @@ def make_char(name,classtype):
             playerlistinfo=charinfo[4]
         case _:
             raise ValueError
-    health=playerlistinfo[1]
-    power=playerlistinfo[2]
+    health=playerlistinfo[0]
+    power=playerlistinfo[1]
+    sattack=playerlistinfo[2]
     type=playerlistinfo[3]
-    #level=playelistinfo[4]
-    player=Character(name,health,power,type)
+    ihealth=playerlistinfo[4]
+    croom=playerlistinfo[5]
+    #level=playelistinfo[3]
+    return health,power, sattack, type,ihealth,croom
 
 def make_room():
     with open("newgamefile","r") as file:
         data=json.load(file)
-    rooms=data["rooms"]
-    return rooms
+    return data["rooms"]
+
+def make_monsters():
+    with open("newgamefile","r") as file:
+        data=json.load(file)
+    monsters=data["monster"]
+    return monsters

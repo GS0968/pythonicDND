@@ -1,27 +1,27 @@
 {
     "rooms": [
-        ["Entrance Hall", ["Goblin"], 4],
-        ["Hall of Fame", ["Goblin", "Slime"],3],
-        ["Abandoned Armory", ["Goblin", "Skeletons"], 2],
-        ["Dark Corridor", ["Skeletons", "Slime", "Brute"], 6],
-        ["Poison Laboratory", ["Slime", "Brute"], 9],
-        ["Ancient Library", ["Dark Mage", "Goblin", "Zombies"], 5],
-        ["Chamber of Secrets", ["Dungeon Guardian"], 0]
+        ["Entrance Hall", ["Goblin"], "False"],
+        ["Hall of Fame", ["Goblin", "Slime"], "False"],
+        ["Abandoned Armory", ["Goblin", "Skeletons"], "False"],
+        ["Dark Corridor", ["Skeletons", "Slime", "Brute"], "False"],
+        ["Poison Laboratory", ["Slime", "Brute"], "False"],
+        ["Ancient Library", ["Dark Mage", "Goblin", "Zombies"], "False"],
+        ["Chamber of Secrets", ["Dungeon Guardian"], "False"]
     ],
 
-    "monsters": [
-        ["Goblin", 45, 6, ["Entrance Hall", "Hall of Fame", "Abandoned Armory", "Ancient Library"]],
-        ["Slime", 85, 7, ["Hall of Fame", "Dark Corridor", "Poison Laboratory"]],
-        ["Skeletons", 65, 9, ["Abandoned Armory", "Dark Corridor"]],
-        ["Brute", 120, 14, ["Dark Corridor", "Poison Laboratory"]],
-        ["Dark Mage", 60, 12, ["Ancient Library"]],
-        ["Dungeon Guardian", 180, 18, ["Chamber of Secrets"]]
+    "monster": [
+        ["Goblin", 45, 6, ["Entrance Hall", "Hall of Fame", "Abandoned Armory", "Ancient Library"], 45],
+        ["Slime", 85, 7, ["Hall of Fame", "Dark Corridor", "Poison Laboratory"], 85],
+        ["Skeletons", 65, 9, ["Abandoned Armory", "Dark Corridor"], 65],
+        ["Brute", 120, 14, ["Dark Corridor", "Poison Laboratory"], 120],
+        ["Dark Mage", 60, 12, ["Ancient Library"], 60],
+        ["Dungeon Guardian", 180, 18, ["Chamber of Secrets"], 180]
     ], 
     
     "character":[
-        [ 120, 12, ["Powerstrike", 1.8], "warrior", 120, ""],
-        [ 85, 16, ["Backstab", 2.5], "rouge", 85, ""],
-        [ 70, 20, ["Firebolt", 2], "mage", 70, ""],
-        [ 100, 10, ["Divine Smite", 1.3,0.25], "paladin", 100, ""]
+        [ 120, [["Heavey Slash", "Cleave", "Shield Bash"], 12], ["Powerstrike", 22, 2], "warrior", 120, "Entrance Hall"],
+        [ 85, [["Quick Slash", "Lunge", "Twin Strike"], 16], ["Backstab", 40, 4], "rouge", 85, "Entrance Hall"],
+        [ 70, [["Magic Bolt", "Arcane Pulse", "Spark"], 20], ["Firebolt", 43, 5], "mage", 70, "Entrance Hall"],
+        [ 100, [["Holy Strike","Blessed Slash","Judgement"], 10], ["Divine Smite", 13, 0 ,1.25], "paladin", 100, "Entrance Hall"]
     ]
 }
