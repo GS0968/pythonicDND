@@ -5,48 +5,25 @@ from entities import Character
 import startup
 import Getinfo
 
-def removemonster(room,mname):
-    with open("newgamefile","r") as file:
-        data=json.load(file)
-    rooms=data["rooms"]
-    match room:
-        case "Entrance Hall":
-            roomdetail=rooms[1]
-        case "Hall of Fame":
-            roomdetail=rooms[2]
-        case "Abandoned Armory":
-            roomdetail=rooms[3]
-        case "Dark Corridor":
-            roomdetail=rooms[4]
-        case "Poison Laboratory":
-            roomdetail=rooms[5]
-        case "Ancient Library":
-            roomdetail=rooms[6]
-        case "Chamber of Secrets":
-            roomdetail=rooms[7]
-        case _:
-            raise ValueError
-    rname=roomdetail[1]
-    rmonsters=roomdetail[2]
-    r=Room(rname,rmonsters,True)
-    r.removemonster(mname)
 
 def main():
-    player, rooms, monsters, filename=startup.start()
+    player, rooms, monsters, newfile, option=startup.start()
     global sfile
-    sfile= filename
-    with open("Openingtxt.txt","r") as file:
-        for line in file:
-            print(line.strip())
-    firstfight(player,"Goblin")
-    room=rooms[0]
+    sfile= newfile
+    croom=player[6]
+    enterance=rooms[0]
+    monsters=enterance[1]
+    monstercount=len(monsters)
+    if option=="new" or (croom=="Entrance Hall" and monstercount>0):
+        with open("Openingtxt.txt","r") as file:
+            for line in file:
+                print(line.strip())
+        firstfight(player,"Goblin")
+        room=rooms[0]
+    else:
+        print("Hello hero... your journey awaits...")
+        startup.resmue()
 
-    
-    
-
-
-
-    
 def victory():
     with open("Victorytext.txt", "r") as file:
         for line in file:

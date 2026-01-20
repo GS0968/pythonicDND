@@ -6,9 +6,9 @@ def getcharacterinfo(sfile):
     character=data["character"]
     characterinfo=str()
     for i in range(len(character)-1):
-        characterinfo=characterinfo + character[i]+ " , "
+        characterinfo=characterinfo + str(character[i])+ " ; "
     i+=1
-    characterinfo=characterinfo+character[i]
+    characterinfo=characterinfo+str(character[i])
     return characterinfo
 
 def getroom(roomname, sfile):
@@ -34,3 +34,5 @@ def defeat():
         for line in file:
             print(line)
 
+#def getfile()
+    

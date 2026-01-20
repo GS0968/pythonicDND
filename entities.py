@@ -2,7 +2,7 @@ import sys
 import random
 import json
 import Getinfo
-from gameplay import removemonster
+
 
 class Room:
     def __init__(self,name, monster, visit="False"):
@@ -11,26 +11,6 @@ class Room:
         self.monsters=monster #will get a list of each monster(if visted the defeated mosters wont be seen) in the room
         self.visited=visit
         #self._traps=trap #will show the number of traps present in the room (shouldnt be visible to characters/players) #will add later
-
-    def to_dict(self): #needs to be edited to fit format
-        return [
-            self.rname,
-            #"loot": self.loot,
-            self.monsters,
-            self._traps,
-            self.visited
-        ]
-
-    @classmethod
-    def from_dict(cls, data):  #needs to be edited to fit format
-        monsters = [Monster.from_dict(m) for m in data["monsters"]]
-        return cls(
-            data["name"],
-            #data["loot"],
-            data["monsters"],
-            data["traps"],
-            data["visited"]
-        )
     
     def showinfo(self):
         name=self.rname
@@ -56,7 +36,7 @@ class Room:
     def removemonster(self,mname):
         monster=[]
         monsters=self.monsters
-        for i in range(len(monsters)-1):
+        for i in range(len(monsters)):
             if mname==monsters[i]:
                 pass
             else:
@@ -71,38 +51,24 @@ class Monster:
         self.room=room
         self.ihealth=ihealth
 
-    def to_dict(self):  #needs to be edited to fit format
-        return {
-            "name": self.mname,
-            "health": self.health,
-            "power": self.power,
-            "room": self.room
-        }
-
     @classmethod
-    def from_dict(cls, data):  #needs to be edited to fit format
-        return cls(
-            data["name"],
-            data["health"],
-            data["power"],
-            data["room"]
-        )
-    
+    def sethealth(self,health):
+        self.health=health
+
     def attack(self,sfile):
         characterinfo=str(Getinfo.getcharacterinfo(sfile))
-        name, health, power, type, initialhealth, room=characterinfo.split(" , ")
-        user=Character(name, health, power, type, initialhealth, room)
+        name, health, power, sattack, type, initialhealth, room=characterinfo.split(" ; ")
+        user=Character(name, int(health), power, sattack, type, int(initialhealth), room)
         user.takedamage(self.power)
         print(f"The {self.mname} hits and deals {self.power}.")
 
     def takedamage(self, damage):
         health=int(self.health)-int(damage)
         if health>0:
-            self.health=health
+            self.sethealth(health)
             print(f"The {self.mname} is at {self.health} health")
         else:
             print("You have defeated the monster")
-            
             self.removeroom()
     
     def getinfo(self):
@@ -110,6 +76,7 @@ class Monster:
         return details
     
     def removeroom(self):
+        sfile=Getinfo.getfilename()
         characterinfo=Getinfo.getcharacterinfo()
         name, health, power, sattack, type, initialhealth, croom=characterinfo.split(" , ")
         room=self.room
@@ -121,7 +88,31 @@ class Monster:
                 else:
                     rooms.append(room[i])
         self.room=rooms
-        removemonster(croom,self.mname)
+        with open(sfile,"r") as file:
+            data=json.load(file)
+        rooms=data["rooms"]
+        match room:
+            case "Entrance Hall":
+                roomdetail=rooms[1]
+            case "Hall of Fame":
+                roomdetail=rooms[2]
+            case "Abandoned Armory":
+                roomdetail=rooms[3]
+            case "Dark Corridor":
+                roomdetail=rooms[4]
+            case "Poison Laboratory":
+                roomdetail=rooms[5]
+            case "Ancient Library":
+                roomdetail=rooms[6]
+            case "Chamber of Secrets":
+                roomdetail=rooms[7]
+            case _:
+                raise ValueError
+        rname=roomdetail[1]
+        rmonsters=roomdetail[2]
+        r=Room(rname,rmonsters,True)
+        r.removemonster(self.mname)
+
         if len(self.room)>1:
             self.health=self.ihealth
         
@@ -139,22 +130,9 @@ class Character:
         self._ihealth=initialhealth #should not be changed throughout game for character
         #self.lvl=level
 
-    def to_dict(self):  #needs to be edited to fit format
-        return {
-            "name": self.name,
-            "health": self.health,
-            "power": self.power,
-            "type": self.type
-        }
-
     @classmethod
-    def from_dict(cls, data):   #needs to be edited to fit format
-        return cls(
-            data["name"],
-            data["health"],
-            data["power"],
-            data["type"]
-        )
+    def sethealth(self,health):
+        self.health=health
 
     def attack(self,mdetails):
         power=self.power
@@ -190,7 +168,7 @@ class Character:
     def takedamage(self, damage):
         health=self.health-damage
         if health>0:
-            self.health=health
+            self.sethealth(health)
             print(f"Now you have a health of: {self.health}")
         else:
             Getinfo.defeat()
