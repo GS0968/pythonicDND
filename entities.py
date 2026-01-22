@@ -59,25 +59,25 @@ class Monster:
         characterinfo=str(Getinfo.getcharacterinfo(sfile))
         name, health, power, sattack, type, initialhealth, room=characterinfo.split(" ; ")
         user=Character(name, int(health), power, sattack, type, int(initialhealth), room)
-        user.takedamage(self.power)
         print(f"The {self.mname} hits and deals {self.power}.")
+        user.takedamage(self.power)
 
-    def takedamage(self, damage):
+    def takedamage(self, damage,sfile):
+        print(self.health)
         health=int(self.health)-int(damage)
         if health>0:
-            self.sethealth(health)
+            self.health=health
             print(f"The {self.mname} is at {self.health} health")
         else:
             print("You have defeated the monster")
-            self.removeroom()
+            self.removeroom(sfile)
     
     def getinfo(self):
         details=[f"monster name: {self.mname}, intial health: {self.ihealth}, current health:{self.health}, attacking power:{self.power}"]
         return details
     
-    def removeroom(self):
-        sfile=Getinfo.getfilename()
-        characterinfo=Getinfo.getcharacterinfo()
+    def removeroom(self,sfile):
+        characterinfo=Getinfo.getcharacterinfo(sfile)
         name, health, power, sattack, type, initialhealth, croom=characterinfo.split(" , ")
         room=self.room
         rooms=[]
@@ -134,7 +134,7 @@ class Character:
     def sethealth(self,health):
         self.health=health
 
-    def attack(self,mdetails):
+    def attack(self,mdetails,sfile):
         power=self.power
         attackpower=power[1]*(random.randint(1,20)/10) #random.randint() is used to mimic a die to see how efficitive the acttack would be
         name=mdetails[0]
@@ -143,10 +143,10 @@ class Character:
         room=mdetails[3]
         ihealth=mdetails[4]
         monster=Monster(name, health, power, room,ihealth)
-        monster.takedamage(attackpower)
+        monster.takedamage(attackpower,sfile)
         print(f"{name} has taken damage! {random.choice(self.power[0])} strikes the enemy for {self.power[1]} damage.")
     
-    def specialattack(self,mdetails):
+    def specialattack(self,mdetails,sfile):
         passvalue=random.randint(0,10)
         percentage=self.sattack[2]
         name=mdetails[0]
@@ -157,7 +157,7 @@ class Character:
             ihealth=mdetails[4]
             monster=Monster(name, health, power, room,ihealth)
             print(f"{name} has taken critical damage! {self.sattack[0]} strikes the enemy for {self.sattack[1]} damage.")
-            monster.takedamage(self.sattack[1])
+            monster.takedamage(self.sattack[1],sfile)
         else:
             list=["Oooh, it seems you attack has been diminished to nothing.", "You lost control of the attack and missed."]
             string=random.choice(list)

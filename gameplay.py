@@ -45,13 +45,21 @@ def fight(playerinfo,mname,):
     cihealth=playerinfo[5]
     croom=playerinfo[6]
     player=Character(cname, chealth, cpower, sattack, ctype, cihealth, croom)
-    while player.gethealth()>0 and monster.gethealth()>0:
+    playerhealth=player.gethealth()
+    monsterhealth=monster.gethealth()
+    while playerhealth>0 and monsterhealth>0:
         attacktype=input(f"Do you want to do a basic attack or the special attack? ")
-        match attacktype:
-            case "special":
-                player.specialattack(monsterinfo)
-            case "basic":
-                player.attack(monsterinfo)
+        if "basic" in attacktype:
+            player.attack(monsterinfo,sfile)
+            monster.attack(sfile)
+        elif "special" in attacktype:
+            player.specialattack(monsterinfo,sfile)
+            monster.attack(sfile)
+        else:
+            pass
+        playerhealth=player.gethealth()
+        monsterhealth=monster.gethealth()
+        
 
 def firstfight(playerinfo,mname):
     monsterinfo=Getinfo.getmonster(mname,sfile)
@@ -73,13 +81,19 @@ def firstfight(playerinfo,mname):
     with open("Firstfight.txt","r") as file:
         for line in file:
             print(line.strip())
-    while player.gethealth()>0 and monster.gethealth()>0:
+    playerhealth=chealth
+    monsterhealth=mhealth
+    while playerhealth>0 and monsterhealth>0:
         attacktype=input(f"Do you want to do a basic attack or the special attack? ")
-        match attacktype:
-            case "special":
-                player.specialattack(monsterinfo)
-            case "basic":
-                player.attack(monsterinfo)
-        monster.attack(sfile)
+        if "basic" in attacktype:
+            player.attack(monsterinfo,sfile)
+            monster.attack(sfile)
+        elif "special" in attacktype:
+            player.specialattack(monsterinfo,sfile)
+            monster.attack(sfile)
+        else:
+            pass
+        playerhealth=player.gethealth()
+        monsterhealth=monster.gethealth()
 
 main()

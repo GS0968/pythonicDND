@@ -106,4 +106,5 @@ def make_monsters():
 def resume(sfile):
     with open(sfile, "r") as file:
         data=json.load(file)
-    playerdetails=
+    playerdetails=data["character"]
+    
