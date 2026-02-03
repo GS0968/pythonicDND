@@ -34,5 +34,20 @@ def defeat():
         for line in file:
             print(line)
 
+
+def getrooms(sfile):
+    with open(sfile, "r")as file:
+        data=json.load(file)
+    return data["rooms"]
+
+def getmonsters(sfile):
+    with open(sfile, "r")as file:
+        data=json.load(file)
+    return data["monster"]
+
+def getcharacter(sfile):
+    with open(sfile, "r")as file:
+        data=json.load(file)
+    return data["character"]
 #def getfile()
     

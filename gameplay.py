@@ -29,8 +29,8 @@ def victory():
         for line in file:
             print(line)
 
-def fight(playerinfo,mname,):
-    monsterinfo=Getinfo.getmonster(mname)
+def fight(playerinfo,mname):
+    monsterinfo=Getinfo.getmonster(mname,sfile)
     mname=monsterinfo[0]
     mhealth=monsterinfo[1]
     mpower=monsterinfo[2]
@@ -81,19 +81,19 @@ def firstfight(playerinfo,mname):
     with open("Firstfight.txt","r") as file:
         for line in file:
             print(line.strip())
-    playerhealth=chealth
-    monsterhealth=mhealth
-    while playerhealth>0 and monsterhealth>0:
-        attacktype=input(f"Do you want to do a basic attack or the special attack? ")
+    while True:
+        attacktype=input("Do you want to do a basic attack or the special attack? ").lower()
+        attacktype=attacktype.strip()
         if "basic" in attacktype:
-            player.attack(monsterinfo,sfile)
-            monster.attack(sfile)
+            cattack=player.attack(monster,sfile)
+            monster.takedamage(cattack)
+            mattack=monster.attack(sfile,player)
+            player.takedamage(mattack)
         elif "special" in attacktype:
-            player.specialattack(monsterinfo,sfile)
+            player.specialattack(monster,sfile)
             monster.attack(sfile)
         else:
+            print(f"{attacktype} is not a valid input")
             pass
-        playerhealth=player.gethealth()
-        monsterhealth=monster.gethealth()
 
 main()
