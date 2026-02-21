@@ -5,7 +5,7 @@ import Getinfo
 
 
 class Room:
-    def __init__(self,name, monster, visit="False"):
+    def __init__(self,name, monster, visit):
         self.rname=name 
         #self.loot=items #will get a list of each loot in the room (added later)
         self.monsters=monster #will get a list of each monster(if visted the defeated mosters wont be seen) in the room
@@ -33,15 +33,34 @@ class Room:
                 monster=Monster(monsters[i])
                 monsterinfo=monsterinfo+monster.getinfo()
     
-    def removemonster(self,mname):
-        monster=[]
+    def removemonster(self,mname,sfile):
+        newmonsters=[]
         monsters=self.monsters
         for i in range(len(monsters)):
-            if mname==monsters[i]:
-                pass
-            else:
-                monster.append(monsters[i])
-        self.monsters=monster
+            if mname!=monsters[i]:
+                newmonsters.append(monsters[i])
+        self.monsters=newmonsters
+        self.update(sfile)
+
+    def update(self,sfile):
+        with open(sfile,"r") as file:
+            data = json.load(file)
+        player = data["character"]
+        rooms = data["rooms"]
+        monsters= data["monster"]
+        for i in range(len(rooms)):
+            if rooms[i[0]]==self.rname:
+                rooms[i]=self.getinfo()
+        game_state = {
+            "rooms": rooms,
+            "monster":monsters,
+            "character": player
+        }
+        with open(sfile, "w") as file:
+            json.dump(game_state, file)
+
+    def getinfo(self):
+        return[self.rname,self.monsters,self.visited]
 
 class Monster: 
     def __init__(self, name, health, power, room, ihealth):
@@ -52,44 +71,32 @@ class Monster:
         self.ihealth=ihealth
 
 
-    def attack(self,sfile):
-        characterinfo=str(Getinfo.getcharacterinfo(sfile))
-        name, health, power, sattack, type, initialhealth, room=characterinfo.split(" ; ")
-        user=Character(name, int(health), power, sattack, type, int(initialhealth), room)
+    def attack(self):
         print(f"The {self.mname} hits and deals {self.power}.")
         return self.power
 
-    def takedamage(self, damage,sfile):
-        print(self.health)
+    def takedamage(self, damage,sfile,character):
         health=int(self.health)-int(damage)
         if health>0:
             self.health=health
             print(f"The {self.mname} is at {self.health} health")
         else:
             print("You have defeated the monster")
-            self.removeroom(sfile)
-        self.save(sfile)
+            self.removeroom(sfile,character)
+        return health
+
     
     def getinfo(self):
-        details=[f"monster name: {self.mname}, intial health: {self.ihealth}, current health:{self.health}, attacking power:{self.power}"]
+        details=[self.mname,self.health,self.power,self.room,self.ihealth]
         return details
     
-    def removeroom(self,sfile):
-        characterinfo=Getinfo.getcharacterinfo(sfile)
-        name, health, power, sattack, type, initialhealth, croom=characterinfo.split(" , ")
-        room=self.room
-        rooms=[]
-        if croom!="":
-            for i in range(len(room)-1):
-                if room[i]==croom:
-                    pass
-                else:
-                    rooms.append(room[i])
-        self.room=rooms
+    def removeroom(self,sfile,character):
+        characterinfo=character.getinfo()
+        croom=characterinfo[5]
         with open(sfile,"r") as file:
             data=json.load(file)
         rooms=data["rooms"]
-        match room:
+        match croom:
             case "Entrance Hall":
                 roomdetail=rooms[1]
             case "Hall of Fame":
@@ -109,11 +116,32 @@ class Monster:
         rname=roomdetail[1]
         rmonsters=roomdetail[2]
         r=Room(rname,rmonsters,True)
-        r.removemonster(self.mname)
+        r.removemonster(self.mname,sfile)
+        newrooms=[]
+        rooms=self.room
+        for i in range(len(rooms)):
+            if rooms[i]!=croom:
+                newrooms.append(rooms[i])
+        self.room=newrooms
+        self.update(sfile)
 
-        if len(self.room)>1:
-            self.health=self.ihealth
-        
+    def update(self,sfile):
+        with open(sfile,"r") as file:
+            data = json.load(file)
+        player = data["character"]
+        rooms = data["rooms"]
+        monsters= data["monster"]
+        for i in range(len(monsters)):
+            if monsters[i[0]]==self.mname:
+                monsters[i]=self.getinfo()
+        game_state = {
+            "rooms": rooms,
+            "monster":monsters,
+            "character": player
+        }
+        with open(sfile, "w") as file:
+            json.dump(game_state, file)
+    
     def gethealth(self):
         return self.health
 
@@ -132,7 +160,8 @@ class Character:
     def sethealth(self,health):
         self.health=health
 
-    def attack(self,mdetails,sfile):
+    def attack(self,Monster,sfile):
+        mdetails=Monster.getinfo()
         power=self.power
         attackpower=power[1]*(random.randint(1,20)/10) #random.randint() is used to mimic a die to see how efficitive the acttack would be
         mname=mdetails[0]
@@ -143,7 +172,8 @@ class Character:
         print(f"{mname} has taken damage! {random.choice(self.power[0])} strikes the enemy for {attackpower} damage.")
         return attackpower
     
-    def specialattack(self,mdetails,sfile):
+    def specialattack(self,Monster,sfile):
+        mdetails=Monster.getinfo()
         passvalue=random.randint(0,10)
         percentage=self.sattack[2]
         name=mdetails[0]
@@ -162,16 +192,20 @@ class Character:
         if self.type=="paladin":
             self.health=self.health*self.sattack[3]
     
-    def takedamage(self, damage):
+    def takedamage(self, damage:int):
         health=self.health-damage
         if health>0:
             self.sethealth(health)
             print(f"Now you have a health of: {self.health}")
         else:
             Getinfo.defeat()
+        return health
 
     def gethealth(self):
         return self.health
     
     def sattackname(self):
         return self.sattack[0]
+
+    def getinfo(self):
+        return [self.name,self.health,self.power,self.sattack,self.type,self.croom,self._ihealth]
