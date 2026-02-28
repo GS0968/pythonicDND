@@ -71,6 +71,7 @@ def fight(mname):
 
 def firstfight(mname):
     global sfile,character
+    player=character
     monsterinfo=Getinfo.getmonster(mname,sfile)
     mname=monsterinfo[0]
     mhealth=monsterinfo[1]
@@ -78,8 +79,6 @@ def firstfight(mname):
     mrooms=monsterinfo[3]
     mihealth=monsterinfo[4]
     monster=Monster(mname,mhealth,mpower,mrooms,mihealth)
-    
-    sname=character.sattackname()
     with open("Firstfight.txt","r") as file:
         for line in file:
             print(line)
@@ -91,17 +90,23 @@ def firstfight(mname):
         attacktype=input("Do you want to do a basic attack or the special attack? ").lower()
         attacktype=attacktype.strip()
         if "basic" in attacktype:
-            cattack=character.attack(monster,sfile)
-            mhealth=monster.takedamage(cattack,sfile,character)
+            cattack=player.attack(monster,sfile)
+            mhealth=monster.takedamage(cattack,sfile,player)
             if mhealth<=0:
                 break
             mattack=monster.attack()
-            chealth=character.takedamage(mattack)
+            chealth=player.takedamage(mattack)
             if chealth<=0:
                 break
         elif "special" in attacktype:
-            character.specialattack(monster,sfile)
-            monster.attack(sfile)
+            cattack=player.specialattack(monster,sfile)
+            mhealth=monster.takedamage(cattack,sfile,player)
+            if mhealth<=0:
+                break
+            mattack=monster.attack()
+            chealth=player.takedamage(mattack)
+            if chealth<=0:
+                break
         else:
             print(f"{attacktype} is not a valid input")
             pass
