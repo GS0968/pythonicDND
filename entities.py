@@ -49,7 +49,8 @@ class Room:
         rooms = data["rooms"]
         monsters= data["monster"]
         for i in range(len(rooms)):
-            if rooms[i[0]]==self.rname:
+            room=rooms[i]
+            if room[0]==self.rname:
                 rooms[i]=self.getinfo()
         game_state = {
             "rooms": rooms,
@@ -132,11 +133,15 @@ class Monster:
         rooms = data["rooms"]
         monsters= data["monster"]
         for i in range(len(monsters)):
-            if monsters[i[0]]==self.mname:
-                monsters[i]=self.getinfo()
+            newmonsters=[]
+            monster=monsters[i]
+            if monster[0]==self.mname:
+                newmonsters.append(self.getinfo)
+            else:
+                newmonsters.append(monster)
         game_state = {
             "rooms": rooms,
-            "monster":monsters,
+            "monster":newmonsters,
             "character": player
         }
         with open(sfile, "w") as file:
@@ -178,24 +183,21 @@ class Character:
         percentage=self.sattack[2]
         name=mdetails[0]
         if passvalue>=percentage:
-            health=mdetails[1]
-            power=mdetails[2]
-            room=mdetails[3]
-            ihealth=mdetails[4]
-            monster=Monster(name, health, power, room,ihealth)
             print(f"{name} has taken critical damage! {self.sattack[0]} strikes the enemy for {self.sattack[1]} damage.")
-            monster.takedamage(self.sattack[1],sfile)
+            if self.type=="paladin":
+                self.health=self.health*self.sattack[3]
+            return self.sattack[1]
         else:
             list=["Oooh, it seems you attack has been diminished to nothing.", "You lost control of the attack and missed."]
             string=random.choice(list)
-            print(f"{string} {name} takes 0 damage.")
-        if self.type=="paladin":
-            self.health=self.health*self.sattack[3]
+            print(f"{string}")
+            print(f"{name} takes 0 damage.")
+            return 0
     
     def takedamage(self, damage:int):
         health=self.health-damage
         if health>0:
-            self.sethealth(health)
+            self.health=health
             print(f"Now you have a health of: {self.health}")
         else:
             Getinfo.defeat()
