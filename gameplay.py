@@ -139,11 +139,11 @@ def selectmonster():
         for i in range(len(monsterlist)-1):
             monsteroptions=monsteroptions+str(monsterlist[i])+", "
         i+=1
-        newroomoption=newroomoption+str(monsterlist[i])
-        print(monsterlist)
+        monsteroptions=monsteroptions+str(monsterlist[i])
+        print(monsteroptions)
     elif len(monsterlist)==1:
         monsteroptions=monsteroptions+str(monsterlist[0])
-        print (monsterlist)
+        print (monsteroptions)
     while True:
         monsterfightinput=input("Which monster do you want to fight: ")
         for i in range(len(monsterlist)):
@@ -161,7 +161,7 @@ def update():
     monsters= data["monster"]
 
 def defeat():
-    with open("Deafeattxt.txt","r") as file:
+    with open("Defeattxt.txt","r") as file:
         for line in file:
             print(line, end='', flush=True)
             time.sleep(0.1)

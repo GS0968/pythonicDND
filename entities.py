@@ -11,26 +11,25 @@ class Room:
         self.visited=visit
         #self._traps=trap #will show the number of traps present in the room (shouldnt be visible to characters/players) #will add later
     
-    def showinfo(self):
-        name=self.rname
-        if self._traps>5:
-            traps= "multiple traps"
-        elif 0<self._traps<=5:
-            traps= "a few traps"
-        else:
-            traps= "no traps"
-        if self.visited==True:
-            string=f"You have already visited this place. There are currently {len(self.monsters)} undefeated, {traps} armed, and {len(self.loot)} not looted in this place"
-
-        else:
-            visit=f"You haven't opened this room. There are currently {len(self.monsters)} undefeated, {traps} armed, and {len(self.loot)} not looted in this place"
+    #def showinfo(self):
+        #name=self.rname
+        #if self._traps>5:
+            #traps= "multiple traps"
+        #elif 0<self._traps<=5:
+            #traps= "a few traps"
+        #else:
+            #traps= "no traps"
+        #if self.visited==True:
+            #string=f"You have already visited this place. There are currently {len(self.monsters)} undefeated, {traps} armed, and {len(self.loot)} not looted in this place"
+        #else:
+            #visit=f"You haven't opened this room. There are currently {len(self.monsters)} undefeated, {traps} armed, and {len(self.loot)} not looted in this place"
        
-        if len(self.monsters)>0:
-            monsters=self.monsters
-            monsterinfo=str()
-            for i in range(len(monsters)):
-                monster=Monster(monsters[i])
-                monsterinfo=monsterinfo+monster.getinfo()
+        #if len(self.monsters)>0:
+            #monsters=self.monsters
+            #monsterinfo=str()
+            #for i in range(len(monsters)):
+                #monster=Monster(monsters[i])
+                #monsterinfo=monsterinfo+monster.getinfo()
     
     def removemonster(self,mname,sfile):
         newmonsters=[]
@@ -199,7 +198,8 @@ class Character:
             print(f"Now you have a health of: {self.health}")
             self.update(sfile)
         else:
-            Getinfo.defeat()
+            self.health=health
+            self.update(sfile)
         return health
 
     def gethealth(self):
