@@ -52,6 +52,7 @@ def getcharacter(sfile):
 def getnewrooms(croom):
     with open("Roomlayout", "r") as file:
         data=json.load(file)
+    print(data[croom])
     return data[croom]
 
 def getroommonster(croom,sfile):
@@ -59,9 +60,12 @@ def getroommonster(croom,sfile):
         data=json.load(file)
     rooms=data["rooms"]
     for i in range(len(rooms)):
-        if rooms[i]==croom:
-            room=rooms[i]
-    return room[1]
+        room=rooms[i]
+        if room[0]==croom:
+            if room[1]!=None:
+                return room[1]
+            else:
+                return []
 
 def getallinfo(sfile):
     with open(sfile, "r")as file:

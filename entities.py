@@ -209,7 +209,7 @@ class Character:
         return self.sattack[0]
 
     def getinfo(self):
-        return [self.name,self.health,self.power,self.sattack,self.type,self.croom,self._ihealth]
+        return [self.name,self.health,self.power,self.sattack,self.type,self._ihealth,self.croom]
     
     def heal(self,amount:int):
         self.health+=amount

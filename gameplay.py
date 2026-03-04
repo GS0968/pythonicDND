@@ -27,7 +27,7 @@ def main():
         try:
             opening()
             update()
-            move(croom)
+            move()
             resume()
         except KeyboardInterrupt:
             startup.save_game(sfile, player, rooms, monsters)
@@ -50,10 +50,9 @@ def firstfight(mname):
 
     with open("Firstfight.txt","r") as file:
         for line in file:
-            print(line)
-            #for character in line:
-                #print(character, end='', flush=True)
-                #time.sleep(0.01)
+            for character in line:
+                print(character, end='', flush=True)
+                time.sleep(0.01)
     print()
 
     global sfile,player
@@ -108,7 +107,6 @@ def firstfight(mname):
 
 def move():
     global sfile, player, rooms, monsters, croom
-    rdetails=Getinfo.getroom(croom,sfile)
     print(f"You are currently in {croom}")
     newrooms=Getinfo.getnewrooms(croom)
     found=bool(False)
@@ -236,16 +234,16 @@ def resume():
     global croom,sfile
     while True:
         try:
-            if Getinfo.getroommonster(croom,sfile)>=1:
+            if Getinfo.getroommonster(croom,sfile)!=None:
                 mname=selectmonster()
                 if fight(mname)==0:
                     defeat()
                 else:
-                    move(croom)
+                    move()
                     update()
             else:
                 print("You have defeated all the monsters in this room")
-                move(croom)
+                move()
                 update()
         except KeyboardInterrupt:
             break 
