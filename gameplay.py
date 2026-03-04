@@ -56,7 +56,6 @@ def firstfight(mname):
     print()
 
     global sfile,player
-    player=player
     monsterinfo=Getinfo.getmonster(mname,sfile)
     mname=monsterinfo[0]
     mhealth=monsterinfo[1]
@@ -181,7 +180,6 @@ def victory():
 
 def fight(mname):
     global sfile,player
-    player=player
     monsterinfo=Getinfo.getmonster(mname,sfile)
     mname=monsterinfo[0]
     mhealth=monsterinfo[1]
