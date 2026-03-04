@@ -52,7 +52,7 @@ def save_game(filename,player,rooms,monsters): #player, room, and mosnters are l
         "character": player
     }
     with open(filename, "w") as file:
-        json.dump(game_state, file)
+        json.dump(game_state, file, indent=4)
 
 def make_char(classtype):
     classtype=str(classtype)
@@ -103,8 +103,4 @@ def make_monsters():
     else:
         return data["monster"]
 
-def resume(sfile):
-    with open(sfile, "r") as file:
-        data=json.load(file)
-    playerdetails=data["character"]
     

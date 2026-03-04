@@ -12,13 +12,17 @@ def getcharacterinfo(sfile):
     return characterinfo
 
 def getroom(roomname, sfile):
+    found=False
     with open(sfile, "r")as file:
         data=json.load(file)
     rooms=data["rooms"]
     for i in range(len(rooms)-1):
         room=rooms[i]
         if roomname==room[0]:
+            found=True
             return room
+    if found==False:
+        raise ValueError
 
 def getmonster(monstername, sfile):
     with open(sfile, "r")as file:
@@ -28,11 +32,6 @@ def getmonster(monstername, sfile):
         monster=monsters[i]
         if monstername==monster[0]:
             return monster
-
-def defeat():
-    with open("Deafeattxt.txt","r") as file:
-        for line in file:
-            print(line)
 
 
 def getrooms(sfile):
@@ -49,5 +48,23 @@ def getcharacter(sfile):
     with open(sfile, "r")as file:
         data=json.load(file)
     return data["character"]
-#def getfile()
-    
+
+def getnewrooms(croom):
+    with open("Roomlayout", "r") as file:
+        data=json.load(file)
+    return data[croom]
+
+def getroommonster(croom,sfile):
+    with open(sfile, "r")as file:
+        data=json.load(file)
+    rooms=data["rooms"]
+    for i in range(len(rooms)):
+        if rooms[i]==croom:
+            room=rooms[i]
+    return room[1]
+
+def getallinfo(sfile):
+    with open(sfile, "r")as file:
+        data=json.load(file)
+    clearedrooms=[]
+    rooms=data["rooms"]

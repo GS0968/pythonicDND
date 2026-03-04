@@ -1,4 +1,3 @@
-import sys
 import random
 import json
 import Getinfo
@@ -45,30 +44,26 @@ class Room:
     def update(self,sfile):
         with open(sfile,"r") as file:
             data = json.load(file)
-        player = data["character"]
         rooms = data["rooms"]
-        monsters= data["monster"]
         for i in range(len(rooms)):
             room=rooms[i]
             if room[0]==self.rname:
                 rooms[i]=self.getinfo()
-        game_state = {
-            "rooms": rooms,
-            "monster":monsters,
-            "character": player
-        }
+            else:
+                rooms[i]=room
+        data["rooms"]=rooms
         with open(sfile, "w") as file:
-            json.dump(game_state, file)
+            json.dump(data, file, indent=4)
 
     def getinfo(self):
-        return[self.rname,self.monsters,self.visited]
+        return [self.rname,self.monsters,self.visited]
 
 class Monster: 
     def __init__(self, name, health, power, room, ihealth):
         self.mname=name
         self.health=health
         self.power=power
-        self.room=room
+        self.mroom=room
         self.ihealth=ihealth
 
 
@@ -81,17 +76,31 @@ class Monster:
         if health>0:
             self.health=health
             print(f"The {self.mname} is at {self.health} health")
+            self.update(sfile)
         else:
             print("You have defeated the monster")
+            self.health=self.ihealth
             self.removeroom(sfile,character)
         return health
 
     
     def getinfo(self):
-        details=[self.mname,self.health,self.power,self.room,self.ihealth]
+        details=[self.mname,self.health,self.power,self.mroom,self.ihealth]
         return details
     
     def removeroom(self,sfile,character):
+        self.link(sfile,character)
+        characterinfo=character.getinfo()
+        croom=characterinfo[5]
+        newrooms=[]
+        mrooms=self.mroom
+        for i in range(len(mrooms)):
+            if mrooms[i]!=croom:
+                newrooms.append(mrooms[i])
+        self.mroom=newrooms
+        self.update(sfile)
+
+    def link(self,sfile,character):
         characterinfo=character.getinfo()
         croom=characterinfo[5]
         with open(sfile,"r") as file:
@@ -99,53 +108,40 @@ class Monster:
         rooms=data["rooms"]
         match croom:
             case "Entrance Hall":
-                roomdetail=rooms[1]
+                roomdetail=rooms[0]
             case "Hall of Fame":
-                roomdetail=rooms[2]
+                roomdetail=rooms[1]
             case "Abandoned Armory":
-                roomdetail=rooms[3]
+                roomdetail=rooms[2]
             case "Dark Corridor":
-                roomdetail=rooms[4]
+                roomdetail=rooms[3]
             case "Poison Laboratory":
-                roomdetail=rooms[5]
+                roomdetail=rooms[4]
             case "Ancient Library":
-                roomdetail=rooms[6]
+                roomdetail=rooms[5]
             case "Chamber of Secrets":
-                roomdetail=rooms[7]
+                roomdetail=rooms[6]
             case _:
                 raise ValueError
-        rname=roomdetail[1]
-        rmonsters=roomdetail[2]
-        r=Room(rname,rmonsters,True)
+        rname=roomdetail[0]
+        rmonsters=roomdetail[1]
+        r=Room(rname,rmonsters,"True")
         r.removemonster(self.mname,sfile)
-        newrooms=[]
-        rooms=self.room
-        for i in range(len(rooms)):
-            if rooms[i]!=croom:
-                newrooms.append(rooms[i])
-        self.room=newrooms
-        self.update(sfile)
 
     def update(self,sfile):
         with open(sfile,"r") as file:
             data = json.load(file)
-        player = data["character"]
-        rooms = data["rooms"]
         monsters= data["monster"]
+        newmonsters=[]
         for i in range(len(monsters)):
-            newmonsters=[]
             monster=monsters[i]
             if monster[0]==self.mname:
-                newmonsters.append(self.getinfo)
+                newmonsters.append(self.getinfo())
             else:
                 newmonsters.append(monster)
-        game_state = {
-            "rooms": rooms,
-            "monster":newmonsters,
-            "character": player
-        }
+        data["monster"]=newmonsters
         with open(sfile, "w") as file:
-            json.dump(game_state, file)
+            json.dump(data, file, indent=4)
     
     def gethealth(self):
         return self.health
@@ -161,20 +157,22 @@ class Character:
         self._ihealth=initialhealth #should not be changed throughout game for character
         #self.lvl=level
 
-    @classmethod
-    def sethealth(self,health):
-        self.health=health
+    def gethealth(self):
+        return self.health
 
     def attack(self,Monster,sfile):
         mdetails=Monster.getinfo()
         power=self.power
-        attackpower=power[1]*(random.randint(1,20)/10) #random.randint() is used to mimic a die to see how efficitive the acttack would be
+        attackpower=power[1]*int(random.randint(1,20)/10) #random.randint() is used to mimic a die to see how efficitive the acttack would be
         mname=mdetails[0]
         health=mdetails[1]
         power=mdetails[2]
         room=mdetails[3]
         ihealth=mdetails[4]
-        print(f"{mname} has taken damage! {random.choice(self.power[0])} strikes the enemy for {attackpower} damage.")
+        if attackpower>0:
+            print(f"{mname} has taken damage! {random.choice(self.power[0])} strikes the enemy for {attackpower} damage.")
+        else:
+            print(f"{mname} dodged your {random.choice(self.power[0])}")
         return attackpower
     
     def specialattack(self,Monster,sfile):
@@ -194,11 +192,12 @@ class Character:
             print(f"{name} takes 0 damage.")
             return 0
     
-    def takedamage(self, damage:int):
+    def takedamage(self, damage:int,sfile):
         health=self.health-damage
         if health>0:
             self.health=health
             print(f"Now you have a health of: {self.health}")
+            self.update(sfile)
         else:
             Getinfo.defeat()
         return health
@@ -211,3 +210,24 @@ class Character:
 
     def getinfo(self):
         return [self.name,self.health,self.power,self.sattack,self.type,self.croom,self._ihealth]
+    
+    def heal(self,amount:int):
+        self.health+=amount
+    
+    def update(self,sfile):
+        with open(sfile,"r") as file:
+            data = json.load(file)
+        data["character"]=self.getinfo()
+        with open(sfile, "w") as file:
+            json.dump(data, file, indent=4)
+    
+    def move(self,newroom,sfile):
+        self.croom=newroom
+        self.update(sfile)
+
+    def getinfostr(self):
+        print(f"{self.name}, you currently have {self.health} lifepoints and you are in {self.croom}")
+
+    def getname(self):
+        return self.name
+    

@@ -1,0 +1,9 @@
+{
+    "Entrance Hall":["Hall of Fame"],
+    "Hall of Fame":["Entrance Hall", "Abandoned Armory", "Dark Corridor", "Poison Laboratory","Ancient Library","Chamber of Secrets"],
+    "Abandoned Armory":["Hall of Fame"],
+    "Dark Corridor":["Hall of Fame"],
+    "Poison Laboratory":["Hall of Fame"],
+    "Ancient Library":["Hall of Fame"],
+    "Chamber of Secrets":["Hall of Fame"]
+}
