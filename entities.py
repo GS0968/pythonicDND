@@ -97,11 +97,14 @@ class Monster:
             if mrooms[i]!=croom:
                 newrooms.append(mrooms[i])
         self.mroom=newrooms
-        self.update(sfile)
+        if len(self.mroom)>1:
+            self.update(sfile)
+        else:
+            self.removemonster(sfile)
 
     def link(self,sfile,character):
         characterinfo=character.getinfo()
-        croom=characterinfo[5]
+        croom=characterinfo[6]
         with open(sfile,"r") as file:
             data=json.load(file)
         rooms=data["rooms"]
@@ -144,6 +147,21 @@ class Monster:
     
     def gethealth(self):
         return self.health
+    
+    def removemonster(self,sfile):
+        with open(sfile,"r") as file:
+            data = json.load(file)
+        monsters= data["monster"]
+        newmonsters=[]
+        for i in range(len(monsters)):
+            monster=monsters[i]
+            if monster[0]==self.mname:
+                pass
+            else:
+                newmonsters.append(monster)
+        data["monster"]=newmonsters
+        with open(sfile, "w") as file:
+            json.dump(data, file, indent=4)
 
 class Character:
     def __init__(self, name, health, power, specialpower, type, initialhealth, room):

@@ -27,13 +27,17 @@ def main():
         try:
             opening()
             update()
-            move()
-            resume()
+            while True:
+                if move()==True:
+                    break
         except KeyboardInterrupt:
             startup.save_game(sfile, player, rooms, monsters)
     else:
         print(f"Hello hero... your journey awaits...\nYou currently are in {croom}")
+    try:
         resume()
+    except KeyboardInterrupt:
+        startup.save_game(sfile, player, rooms, monsters)
 
 def opening():
         with open("Openingtxt.txt","r") as file:
@@ -47,7 +51,6 @@ def opening():
             firstvictory()
 
 def firstfight(mname):
-
     with open("Firstfight.txt","r") as file:
         for line in file:
             for character in line:
@@ -115,19 +118,21 @@ def move():
             newroomoption=newroomoption+str(newrooms[i])+", "
         i+=1
         newroomoption=newroomoption+str(newrooms[i])
-        print(newroomoption)
+        print(newroomoption) #can i shorten this
+        while found==False:
+            newroominput=input("Enter the room you want to go to: ")
+            for i in range(len(newrooms)):
+                if newrooms[i]==newroominput:
+                    found=True
+                    croom=newroominput
+                    return True
     elif len(newrooms)==1:
-        newroomoption=newroomoption+str(newrooms[0])
-        print(newroomoption)
-    
-    while found==False:
-        newroominput=input("Enter the room you want to go to: ")
-        for i in range(len(newrooms)):
-            if newrooms[i]==newroominput:
-                found=True
-                break
+        croom=newrooms[0]
+        print(f"You have moved to {croom}")
+        return True
     player.move(newroominput,sfile)
     player.update(sfile)
+    
 
 def selectmonster():
     global sfile, rooms, croom
@@ -155,9 +160,19 @@ def update():
     with open(sfile, "r") as file:
         data = json.load(file)
     
-    player = data["character"]
+    character = data["character"]
     rooms = data["rooms"]
     monsters= data["monster"]
+    cname=character[0]
+    chealth=character[1]
+    cpower=character[2]
+    sattack=character[3]
+    ctype=character[4]
+    cihealth=character[5]
+    croom=character[6]
+    player=Character(cname, chealth, cpower, sattack, ctype, cihealth, croom)
+    if monsters==[]:
+        victory()
 
 def defeat():
     with open("Defeattxt.txt","r") as file:
@@ -232,16 +247,21 @@ def resume():
     global croom,sfile
     while True:
         try:
-            if Getinfo.getroommonster(croom,sfile)!=None:
+            monsterlist=Getinfo.getroommonster(croom,sfile)
+            if len(monsterlist)>1:
                 mname=selectmonster()
                 if fight(mname)==0:
                     defeat()
                 else:
-                    move()
+                    while True:
+                        if move()==True:
+                            break
                     update()
             else:
                 print("You have defeated all the monsters in this room")
-                move()
+                while True:
+                        if move()==True:
+                            break
                 update()
         except KeyboardInterrupt:
             break 

@@ -35,7 +35,5 @@ def getroommonster(croom,sfile):
     for i in range(len(rooms)):
         room=rooms[i]
         if room[0]==croom:
-            if room[1]!=None:
-                return room[1]
-            else:
-                return []
+            print(room[1])
+            return room[1]
