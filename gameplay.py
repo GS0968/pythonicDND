@@ -253,9 +253,6 @@ def resume():
                 if fight(mname)==0:
                     defeat()
                 else:
-                    while True:
-                        if move()==True:
-                            break
                     update()
             else:
                 print("You have defeated all the monsters in this room")
